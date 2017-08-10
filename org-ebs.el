@@ -43,4 +43,22 @@
                         (org-entry-get current-headline "Velocity")))))
       velocities)))
 
+(defun org-ebs-set-velocity()
+  "Compare the estimated Effort for the current task to the time clocked, calculate the Velocity (effort / actual), and save that value to `Velocity` property."
+  (let* ((current-headline (or (and (org-at-heading-p)
+                                    (point))
+                               (save-excursion (org-back-to-heading))))
+         (effort-prop (org-entry-get current-headline "Effort"))
+         (effort (org-duration-string-to-minutes
+                  (if effort-prop effort-prop 0)))
+         (actual (org-clock-sum-current-item))
+         (velocity (/ effort actual)))
+    (cond ((= actual 0)
+           (message "No time clocked, skipping velocity calculation."))
+          ((= effort 0)
+           (message "No time estimate, skipping velocity calculation."))
+          (t
+           (org-entry-put current-headline "Velocity"
+                          (number-to-string velocity))))))
+
 (provide 'org-ebs)
