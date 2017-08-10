@@ -42,3 +42,5 @@
                        (string-to-number
                         (org-entry-get current-headline "Velocity")))))
       velocities)))
+
+(provide 'org-ebs)
