@@ -29,3 +29,16 @@
 ;;
 ;; More info:
 ;; https://www.joelonsoftware.com/2007/10/26/evidence-based-scheduling/
+
+;; FIXME: Broken when all headings are not expanded.
+;; TODO: Track date, weight values by most recent.
+(defun org-ebs-get-all-velocities-in-file()
+  (save-excursion
+    (goto-char (point-min))
+    (let ((velocities '()))
+      (while (search-forward ":Velocity:" nil t)
+        (let ((current-headline (save-excursion (org-back-to-heading))))
+          (add-to-list 'velocities
+                       (string-to-number
+                        (org-entry-get current-headline "Velocity")))))
+      velocities)))
