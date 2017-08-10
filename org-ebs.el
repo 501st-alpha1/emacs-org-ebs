@@ -32,8 +32,9 @@
 
 ;; FIXME: Broken when all headings are not expanded.
 ;; TODO: Track date, weight values by most recent.
-(defun org-ebs-get-all-velocities-in-file()
-  (save-excursion
+(defun org-ebs-get-all-velocities-in-file(file)
+  (with-temp-buffer
+    (insert-file-contents file)
     (goto-char (point-min))
     (let ((velocities '()))
       (while (search-forward ":Velocity:" nil t)
