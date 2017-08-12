@@ -71,6 +71,8 @@ The return value is the new value of LIST-VAR."
     (message "Percentages for each bracket are: %s\nFull percentages for each bracket are: %s\nEstimated velocities: %s\nLength of each list: %s, %s, %s" brackets full-brackets estimates (length brackets) (length full-brackets) (length estimates))))
 
 (defun org-ebs-get-all-velocities()
+  (unless org-ebs-files
+    (user-error "Error: No org-ebs-files defined."))
   (let ((all-velocities '()))
     (dolist (file org-ebs-files all-velocities)
       (org-ebs-append-to-list 'all-velocities
