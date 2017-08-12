@@ -39,9 +39,8 @@
     (let ((velocities '()))
       (while (search-forward ":Velocity:" nil t)
         (let ((current-headline (save-excursion (org-back-to-heading))))
-          (add-to-list 'velocities
-                       (string-to-number
-                        (org-entry-get current-headline "Velocity")))))
+          (push (string-to-number
+                 (org-entry-get current-headline "Velocity")) velocities)))
       velocities)))
 
 (defun org-ebs-set-velocity()
