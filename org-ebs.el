@@ -62,4 +62,14 @@
            (org-entry-put current-headline "Velocity"
                           (number-to-string velocity))))))
 
+(defun org-ebs-set-velocity-when-done()
+  "Calculate and set velocity using `org-ebs-set-velocity` for the current task if the state has just changed to DONE or equivalent."
+  (when (catch 'break
+          (dolist (element org-done-keywords)
+            (when (string= (nth 2 (org-heading-components)) element)
+              (throw 'break t))))
+    (org-ebs-set-velocity)))
+
+(add-hook 'org-after-todo-state-change-hook 'my-org-calc-velocity-when-done)
+
 (provide 'org-ebs)
