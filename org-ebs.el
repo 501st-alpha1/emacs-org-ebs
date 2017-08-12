@@ -52,6 +52,8 @@ The return value is the new value of LIST-VAR."
          (RANDOM-TIMES 200)
          (pct-per-time (/ 100.0 RANDOM-TIMES))
          (brackets (make-list 40 nil))
+         (full-brackets '())
+         (sum 0)
          (estimates '()))
     (dotimes (i RANDOM-TIMES)
       (push (round (/ num (nth (random len) velocities))) estimates))
@@ -62,8 +64,6 @@ The return value is the new value of LIST-VAR."
         (unless old-val
           (setq old-val 0))
         (setf (nth bracket brackets) (+ old-val pct-per-time))))
-    (setq full-brackets '())
-    (setq sum 0)
     (dolist (element brackets)
       (setq sum (+ sum (if element element 0)))
       (push sum full-brackets))
