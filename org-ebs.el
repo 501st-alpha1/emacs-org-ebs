@@ -30,6 +30,27 @@
 ;; More info:
 ;; https://www.joelonsoftware.com/2007/10/26/evidence-based-scheduling/
 
+(defvar org-ebs-files '())
+
+;; https://stackoverflow.com/a/24357106/2747593
+(defun org-ebs-append-to-list(list-var elements)
+  "Append ELEMENTS to the end of LIST-VAR.
+
+The return value is the new value of LIST-VAR."
+  (unless (consp elements)
+    (error "ELEMENTS must be a list"))
+  (let ((list (symbol-value list-var)))
+    (if list
+        (setcdr (last list) elements)
+      (set list-var elements)))
+  (symbol-value list-var))
+
+(defun org-ebs-get-all-velocities()
+  (let ((all-velocities '()))
+    (dolist (file org-ebs-files all-velocities)
+      (org-ebs-append-to-list 'all-velocities
+                              (org-ebs-get-all-velocities-in-file file)))))
+
 ;; FIXME: Broken when all headings are not expanded.
 ;; TODO: Track date, weight values by most recent.
 (defun org-ebs-get-all-velocities-in-file(file)
