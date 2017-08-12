@@ -57,11 +57,11 @@ The return value is the new value of LIST-VAR."
       (push (round (/ num (nth (random len) velocities))) estimates))
     (setq estimates (sort estimates '<))
     (dolist (element estimates)
-      (setq bracket (floor (/ element 60)))
-      (setq old-val (nth bracket brackets))
-      (unless old-val
-        (setq old-val 0))
-      (setf (nth bracket brackets) (+ old-val pct-per-time)))
+      (let* ((bracket (floor (/ element 60)))
+             (old-val (nth bracket brackets)))
+        (unless old-val
+          (setq old-val 0))
+        (setf (nth bracket brackets) (+ old-val pct-per-time))))
     (setq full-brackets '())
     (setq sum 0)
     (dolist (element brackets)
