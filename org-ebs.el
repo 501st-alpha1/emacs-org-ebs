@@ -51,13 +51,11 @@ The return value is the new value of LIST-VAR."
          (len (length velocities))
          (RANDOM-TIMES 200)
          (pct-per-time (/ 100.0 RANDOM-TIMES))
+         (brackets (make-list 40 nil))
          (estimates '()))
     (dotimes (i RANDOM-TIMES)
       (push (round (/ num (nth (random len) velocities))) estimates))
     (setq estimates (sort estimates '<))
-    (setq brackets '(nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-                         nil nil nil nil nil nil nil nil nil nil nil nil nil nil
-                         nil nil nil nil nil nil nil nil nil nil nil))
     (dolist (element estimates)
       (setq bracket (floor (/ element 60)))
       (setq old-val (nth bracket brackets))
