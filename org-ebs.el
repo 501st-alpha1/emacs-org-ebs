@@ -45,6 +45,33 @@ The return value is the new value of LIST-VAR."
       (set list-var elements)))
   (symbol-value list-var))
 
+(defun org-ebs-calc-estimate-odds(num)
+  (interactive "nEnter time estimate (minutes): ")
+  (let* ((velocities (org-ebs-get-all-velocities))
+         (len (length velocities))
+         (RANDOM-TIMES 200)
+         (pct-per-time (/ 100.0 RANDOM-TIMES))
+         (estimates '()))
+    (dotimes (i RANDOM-TIMES)
+      (push (round (/ num (nth (random len) velocities))) estimates))
+    (setq estimates (sort estimates '<))
+    (setq brackets '(nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil
+                         nil nil nil nil nil nil nil nil nil nil nil nil nil nil
+                         nil nil nil nil nil nil nil nil nil nil nil))
+    (dolist (element estimates)
+      (setq bracket (floor (/ element 60)))
+      (setq old-val (nth bracket brackets))
+      (unless old-val
+        (setq old-val 0))
+      (setf (nth bracket brackets) (+ old-val pct-per-time)))
+    (setq full-brackets '())
+    (setq sum 0)
+    (dolist (element brackets)
+      (setq sum (+ sum (if element element 0)))
+      (push sum full-brackets))
+    (setq full-brackets (reverse full-brackets))
+    (message "Percentages for each bracket are: %s\nFull percentages for each bracket are: %s\nEstimated velocities: %s\nLength of each list: %s, %s, %s" brackets full-brackets estimates (length brackets) (length full-brackets) (length estimates))))
+
 (defun org-ebs-get-all-velocities()
   (let ((all-velocities '()))
     (dolist (file org-ebs-files all-velocities)
