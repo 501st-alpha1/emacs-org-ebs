@@ -45,13 +45,19 @@ The return value is the new value of LIST-VAR."
       (set list-var elements)))
   (symbol-value list-var))
 
+;; https://stackoverflow.com/a/25100962/2747593
+(defun key-used-p(elt1 elt2)
+  "Helper function for add-to-list: returns non-nil if key is
+already in use in an association list."
+  (eq (car elt1) (car elt2)))
+
 (defun org-ebs-calc-estimate-odds(num)
   (interactive "nEnter time estimate (minutes): ")
   (let* ((velocities (org-ebs-get-all-velocities))
          (len (length velocities))
          (RANDOM-TIMES 200)
          (pct-per-time (/ 100.0 RANDOM-TIMES))
-         (brackets (make-list 40 nil))
+         (brackets '())
          (full-brackets '())
          (sum 0)
          (estimates '()))
@@ -59,14 +65,14 @@ The return value is the new value of LIST-VAR."
       (push (round (/ num (nth (random len) velocities))) estimates))
     (setq estimates (sort estimates '<))
     (dolist (element estimates)
-      (let* ((bracket (floor (/ element 60)))
-             (old-val (nth bracket brackets)))
-        (unless old-val
-          (setq old-val 0))
-        (setf (nth bracket brackets) (+ old-val pct-per-time))))
-    (dolist (element brackets)
-      (setq sum (+ sum (if element element 0)))
-      (push sum full-brackets))
+      (let ((bracket (floor (/ element 60))))
+        (add-to-list 'brackets `(,bracket . 0) t 'key-used-p)
+        (let ((old-val (cdr (assoc bracket brackets))))
+          (setcdr (assoc bracket brackets) (+ old-val pct-per-time)))))
+    (dotimes (i 40)
+      (let ((element (assoc i brackets)))
+        (setq sum (+ sum (if element (cdr element) 0)))
+        (push sum full-brackets)))
     (setq full-brackets (reverse full-brackets))
     (message "Percentages for each bracket are: %s\nFull percentages for each bracket are: %s\nEstimated velocities: %s\nLength of each list: %s, %s, %s" brackets full-brackets estimates (length brackets) (length full-brackets) (length estimates))))
 
