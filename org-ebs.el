@@ -45,12 +45,6 @@ The return value is the new value of LIST-VAR."
       (set list-var elements)))
   (symbol-value list-var))
 
-;; https://stackoverflow.com/a/25100962/2747593
-(defun key-used-p(elt1 elt2)
-  "Helper function for add-to-list: returns non-nil if key is
-already in use in an association list."
-  (eq (car elt1) (car elt2)))
-
 (defun org-ebs-calc-estimate-odds(num)
   (interactive "nEnter time estimate (minutes): ")
   (let* ((velocities (org-ebs-get-all-velocities))
@@ -67,7 +61,7 @@ already in use in an association list."
     (setq estimates (sort estimates '<))
     (dolist (element estimates)
       (let ((bracket (floor (/ element 60))))
-        (add-to-list 'brackets `(,bracket . 0) t 'key-used-p)
+        (add-to-list 'brackets `(,bracket . 0) t 'org-ebs-key-used-p)
         (let ((old-val (cdr (assoc bracket brackets))))
           (setcdr (assoc bracket brackets) (+ old-val pct-per-time)))
         (when (< max-key bracket)
@@ -99,6 +93,12 @@ already in use in an association list."
           (push (string-to-number
                  (org-entry-get current-headline "Velocity")) velocities)))
       velocities)))
+
+;; https://stackoverflow.com/a/25100962/2747593
+(defun org-ebs-key-used-p(elt1 elt2)
+  "Helper function for add-to-list: returns non-nil if key is
+already in use in an association list."
+  (eq (car elt1) (car elt2)))
 
 (defun org-ebs-set-velocity()
   "Compare the estimated Effort for the current task to the time clocked, calculate the Velocity (effort / actual), and save that value to `Velocity` property."
