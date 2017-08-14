@@ -68,7 +68,7 @@ The return value is the new value of LIST-VAR."
         (setq sum (+ sum (if element (cdr element) 0)))
         (push sum full-brackets)))
     (setq full-brackets (reverse full-brackets))
-    (message "Percentages for each bracket are: %s\nFull percentages for each bracket are: %s\nEstimated velocities: %s\nLength of each list: %s, %s, %s" brackets full-brackets estimates (length brackets) (length full-brackets) (length estimates))))
+    (message "Percentages for each bracket are: %s\nFull percentages for each bracket are: %s" brackets full-brackets)))
 
 (defun org-ebs-get-all-velocities()
   (unless org-ebs-files
