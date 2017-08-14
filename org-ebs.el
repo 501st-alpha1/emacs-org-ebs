@@ -45,31 +45,6 @@ The return value is the new value of LIST-VAR."
       (set list-var elements)))
   (symbol-value list-var))
 
-(defun org-ebs-calc-estimate-odds(num)
-  (interactive "nEnter time estimate (minutes): ")
-  (let* ((velocities (org-ebs-get-all-velocities))
-         (RANDOM-TIMES 200)
-         (pct-per-time (/ 100.0 RANDOM-TIMES))
-         (brackets '())
-         (full-brackets '())
-         (sum 0)
-         (max-key 0)
-         (estimates (org-ebs-get-random-adjusted-estimates num velocities
-                                                           RANDOM-TIMES)))
-    (dolist (element estimates)
-      (let ((bracket (floor (/ element 60))))
-        (add-to-list 'brackets `(,bracket . 0) t 'org-ebs-key-used-p)
-        (let ((old-val (cdr (assoc bracket brackets))))
-          (setcdr (assoc bracket brackets) (+ old-val pct-per-time)))
-        (when (< max-key bracket)
-          (setq max-key bracket))))
-    (dotimes (i (+ max-key 1))
-      (let ((element (assoc i brackets)))
-        (setq sum (+ sum (if element (cdr element) 0)))
-        (push sum full-brackets)))
-    (setq full-brackets (reverse full-brackets))
-    (message "Percentages for each bracket are: %s\nFull percentages for each bracket are: %s" brackets full-brackets)))
-
 (defun org-ebs-get-all-velocities()
   (unless org-ebs-files
     (user-error "Error: No org-ebs-files defined."))
@@ -90,6 +65,35 @@ The return value is the new value of LIST-VAR."
           (push (string-to-number
                  (org-entry-get current-headline "Velocity")) velocities)))
       velocities)))
+
+(defun org-ebs-get-full-brackets(estimate)
+  "For given ESTIMATE, calculate odds of completion in given timeframe.  Return list of numbers representing odds work will be completed at or before each hour.  E.g., returned value of:
+
+(23 45 80 100)
+
+means that there is a 23% chance of completion between 0 and 1 hours, 45 percent chance between 1 and 2 hours, 80 percent chance between 2 and 3 hours, and 100 percent chance under 4 hours."
+  (interactive "nEnter time estimate (minutes): ")
+  (let* ((velocities (org-ebs-get-all-velocities))
+         (RANDOM-TIMES 200)
+         (pct-per-time (/ 100.0 RANDOM-TIMES))
+         (brackets '())
+         (full-brackets '())
+         (sum 0)
+         (max-key 0)
+         (estimates (org-ebs-get-random-adjusted-estimates estimate velocities
+                                                           RANDOM-TIMES)))
+    (dolist (element estimates)
+      (let ((bracket (floor (/ element 60))))
+        (add-to-list 'brackets `(,bracket . 0) t 'org-ebs-key-used-p)
+        (let ((old-val (cdr (assoc bracket brackets))))
+          (setcdr (assoc bracket brackets) (+ old-val pct-per-time)))
+        (when (< max-key bracket)
+          (setq max-key bracket))))
+    (dotimes (i (+ max-key 1))
+      (let ((element (assoc i brackets)))
+        (setq sum (+ sum (if element (cdr element) 0)))
+        (push sum full-brackets)))
+    (setq full-brackets (reverse full-brackets))))
 
 (defun org-ebs-get-random-adjusted-estimates(estimate velocities
                                                       &optional random-times)
