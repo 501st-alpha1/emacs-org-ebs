@@ -48,17 +48,14 @@ The return value is the new value of LIST-VAR."
 (defun org-ebs-calc-estimate-odds(num)
   (interactive "nEnter time estimate (minutes): ")
   (let* ((velocities (org-ebs-get-all-velocities))
-         (len (length velocities))
          (RANDOM-TIMES 200)
          (pct-per-time (/ 100.0 RANDOM-TIMES))
          (brackets '())
          (full-brackets '())
          (sum 0)
          (max-key 0)
-         (estimates '()))
-    (dotimes (i RANDOM-TIMES)
-      (push (round (/ num (nth (random len) velocities))) estimates))
-    (setq estimates (sort estimates '<))
+         (estimates (org-ebs-get-random-adjusted-estimates num velocities
+                                                           RANDOM-TIMES)))
     (dolist (element estimates)
       (let ((bracket (floor (/ element 60))))
         (add-to-list 'brackets `(,bracket . 0) t 'org-ebs-key-used-p)
@@ -93,6 +90,16 @@ The return value is the new value of LIST-VAR."
           (push (string-to-number
                  (org-entry-get current-headline "Velocity")) velocities)))
       velocities)))
+
+(defun org-ebs-get-random-adjusted-estimates(estimate velocities
+                                                      &optional random-times)
+  "Divide ESTIMATE by random elements from VELOCITIES, and return results in sorted list.  Divide RANDOM-TIMES times, defaulting to 100."
+  (let ((random-times (or random-times 100))
+        (len (length velocities))
+        (estimates '()))
+    (dotimes (i RANDOM-TIMES)
+      (push (round (/ estimate (nth (random len) velocities))) estimates))
+    (setq estimates (sort estimates '<))))
 
 ;; https://stackoverflow.com/a/25100962/2747593
 (defun org-ebs-key-used-p(elt1 elt2)
