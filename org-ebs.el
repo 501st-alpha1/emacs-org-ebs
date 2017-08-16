@@ -103,9 +103,12 @@ means that there is a 23% chance of completion between 0 and 1 minutes, 45 perce
             (dotimes (i (length full-brackets))
               (let* ((element (nth i full-brackets)))
                 (when (> element percent)
-                  (throw 'break i)))))))
-    (message "Work has %s%% odds of completion in under %s hours."
-             percent (+ match 1))))
+                  (throw 'break i))))))
+         (minutes (+ match 1))
+         (hours (floor (/ minutes 60)))
+         (remainder (% minutes 60)))
+    (message "Work has %s%% odds of completion in under %s hours and %s minutes."
+             percent hours remainder)))
 
 (defun org-ebs-get-random-adjusted-estimates(estimate velocities
                                                       &optional random-times)
