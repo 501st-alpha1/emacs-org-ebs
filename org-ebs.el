@@ -53,7 +53,6 @@ The return value is the new value of LIST-VAR."
       (org-ebs-append-to-list 'all-velocities
                               (org-ebs-get-all-velocities-in-file file)))))
 
-;; FIXME: Broken when all headings are not expanded.
 ;; TODO: Track date, weight values by most recent.
 (defun org-ebs-get-all-velocities-in-file(file)
   (with-temp-buffer
