@@ -71,7 +71,7 @@ The return value is the new value of LIST-VAR."
 
 (23 45 80 100)
 
-means that there is a 23% chance of completion between 0 and 1 hours, 45 percent chance between 1 and 2 hours, 80 percent chance between 2 and 3 hours, and 100 percent chance under 4 hours."
+means that there is a 23% chance of completion between 0 and 1 hours, 45 percent chance under 2 hours, 80 percent chance under 3 hours, and 100 percent chance under 4 hours."
   (interactive "nEnter time estimate (minutes): ")
   (let* ((velocities (org-ebs-get-all-velocities))
          (RANDOM-TIMES 200)
