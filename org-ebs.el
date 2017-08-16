@@ -95,6 +95,19 @@ means that there is a 23% chance of completion between 0 and 1 hours, 45 percent
         (push sum full-brackets)))
     (setq full-brackets (reverse full-brackets))))
 
+(defun org-ebs-get-hours-for-odds(estimate percent)
+  (interactive
+   "nEnter time estimate (minutes): \nnEnter desired percentage (0-100): ")
+  (let* ((full-brackets (org-ebs-get-full-brackets estimate))
+         (match
+          (catch 'break
+            (dotimes (i (length full-brackets))
+              (let* ((element (nth i full-brackets)))
+                (when (> element percent)
+                  (throw 'break i)))))))
+    (message "Work has %s%% odds of completion in under %s hours."
+             percent (+ match 1))))
+
 (defun org-ebs-get-random-adjusted-estimates(estimate velocities
                                                       &optional random-times)
   "Divide ESTIMATE by random elements from VELOCITIES, and return results in sorted list.  Divide RANDOM-TIMES times, defaulting to 100."
