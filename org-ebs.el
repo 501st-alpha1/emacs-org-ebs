@@ -92,7 +92,7 @@ means that there is a 23% chance of completion between 0 and 1 hours, 45 percent
       (let ((element (assoc i brackets)))
         (setq sum (+ sum (if element (cdr element) 0)))
         (push sum full-brackets)))
-    (setq full-brackets (reverse full-brackets))))
+    (reverse full-brackets)))
 
 (defun org-ebs-get-hours-for-odds(estimate percent)
   (interactive
