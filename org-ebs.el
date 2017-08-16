@@ -66,11 +66,11 @@ The return value is the new value of LIST-VAR."
       velocities)))
 
 (defun org-ebs-get-full-brackets(estimate)
-  "For given ESTIMATE, calculate odds of completion in given timeframe.  Return list of numbers representing odds work will be completed at or before each hour.  E.g., returned value of:
+  "For given ESTIMATE, calculate odds of completion in given timeframe.  Return list of numbers representing odds work will be completed at or before each minute.  E.g., returned value of:
 
 (23 45 80 100)
 
-means that there is a 23% chance of completion between 0 and 1 hours, 45 percent chance under 2 hours, 80 percent chance under 3 hours, and 100 percent chance under 4 hours."
+means that there is a 23% chance of completion between 0 and 1 minutes, 45 percent chance under 2 minutes, 80 percent chance under 3 minutes, and 100 percent chance under 4 minutes."
   (interactive "nEnter time estimate (minutes): ")
   (let* ((velocities (org-ebs-get-all-velocities))
          (RANDOM-TIMES 200)
@@ -82,7 +82,7 @@ means that there is a 23% chance of completion between 0 and 1 hours, 45 percent
          (estimates (org-ebs-get-random-adjusted-estimates estimate velocities
                                                            RANDOM-TIMES)))
     (dolist (element estimates)
-      (let ((bracket (floor (/ element 60))))
+      (let ((bracket (floor element)))
         (add-to-list 'brackets `(,bracket . 0) t 'org-ebs-key-used-p)
         (let ((old-val (cdr (assoc bracket brackets))))
           (setcdr (assoc bracket brackets) (+ old-val pct-per-time)))
