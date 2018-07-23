@@ -152,6 +152,6 @@ already in use in an association list."
               (throw 'break t))))
     (org-ebs-set-velocity)))
 
-(add-hook 'org-after-todo-state-change-hook 'my-org-calc-velocity-when-done)
+(add-hook 'org-after-todo-state-change-hook 'org-ebs-set-velocity-when-done)
 
 (provide 'org-ebs)
