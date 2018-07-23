@@ -134,15 +134,15 @@ already in use in an association list."
          (effort-prop (org-entry-get current-headline "Effort"))
          (effort (org-duration-string-to-minutes
                   (if effort-prop effort-prop 0)))
-         (actual (org-clock-sum-current-item))
-         (velocity (/ effort actual)))
+         (actual (org-clock-sum-current-item)))
     (cond ((= actual 0)
            (message "No time clocked, skipping velocity calculation."))
           ((= effort 0)
            (message "No time estimate, skipping velocity calculation."))
           (t
-           (org-entry-put current-headline "Velocity"
-                          (number-to-string velocity))))))
+           (let ((velocity (/ effort actual)))
+             (org-entry-put current-headline "Velocity"
+                            (number-to-string velocity)))))))
 
 (defun org-ebs-set-velocity-when-done()
   "Calculate and set velocity using `org-ebs-set-velocity` for the current task if the state has just changed to DONE or equivalent."
