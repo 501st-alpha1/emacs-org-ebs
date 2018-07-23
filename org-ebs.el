@@ -133,7 +133,7 @@ already in use in an association list."
                                (save-excursion (org-back-to-heading))))
          (effort-prop (org-entry-get current-headline "Effort"))
          (effort (org-duration-string-to-minutes
-                  (if effort-prop effort-prop 0)))
+                  (if effort-prop effort-prop "0")))
          (actual (org-clock-sum-current-item)))
     (cond ((= actual 0)
            (message "No time clocked, skipping velocity calculation."))
