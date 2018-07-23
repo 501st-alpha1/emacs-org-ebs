@@ -140,7 +140,7 @@ already in use in an association list."
           ((= effort 0)
            (message "No time estimate, skipping velocity calculation."))
           (t
-           (let ((velocity (/ effort actual)))
+           (let ((velocity (/ (float effort) actual)))
              (org-entry-put current-headline "Velocity"
                             (number-to-string velocity)))))))
 
