@@ -116,7 +116,7 @@ means that there is a 23% chance of completion between 0 and 1 minutes, 45 perce
   (let ((random-times (or random-times 100))
         (len (length velocities))
         (estimates '()))
-    (dotimes (i RANDOM-TIMES)
+    (dotimes (i random-times)
       (push (round (/ estimate (nth (random len) velocities))) estimates))
     (setq estimates (sort estimates '<))))
 
